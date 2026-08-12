@@ -34,6 +34,30 @@
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
     }
 
+    /* Home button */
+    .home-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 22px;
+      padding: 9px 14px;
+      border: 1px solid #263244;
+      border-radius: 10px;
+      background: #0f172a;
+      color: #94a3b8;
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.2s;
+    }
+
+    .home-btn:hover {
+      background: #1e293b;
+      border-color: #6366f1;
+      color: #f8fafc;
+      transform: translateX(-2px);
+    }
+
     .header {
       margin-bottom: 28px;
       text-align: center;
@@ -218,6 +242,15 @@
 
 <body>
   <main class="calculator">
+
+    <!-- Home button -->
+    <a
+      href="https://robertlentz13-oss.github.io/Student-Tools/"
+      class="home-btn"
+    >
+      ← Home
+    </a>
+
     <div class="header">
       <h1>Final Grade Calculator</h1>
       <p>Find out exactly what score you need on your final exam.</p>
@@ -227,14 +260,7 @@
       <div class="form-group">
         <label for="currentGrade">Current Grade</label>
         <div class="input-wrapper">
-          <input
-            type="number"
-            id="currentGrade"
-            placeholder="e.g. 82"
-            min="0"
-            max="100"
-            step="any"
-          />
+          <input type="number" id="currentGrade" placeholder="e.g. 82" min="0" max="100" step="any" />
           <span class="unit">%</span>
         </div>
       </div>
@@ -242,14 +268,7 @@
       <div class="form-group">
         <label for="desiredGrade">Desired Overall Grade</label>
         <div class="input-wrapper">
-          <input
-            type="number"
-            id="desiredGrade"
-            placeholder="e.g. 90"
-            min="0"
-            max="100"
-            step="any"
-          />
+          <input type="number" id="desiredGrade" placeholder="e.g. 90" min="0" max="100" step="any" />
           <span class="unit">%</span>
         </div>
       </div>
@@ -257,14 +276,7 @@
       <div class="form-group">
         <label for="examWeight">Final Exam Weight</label>
         <div class="input-wrapper">
-          <input
-            type="number"
-            id="examWeight"
-            placeholder="e.g. 30"
-            min="0"
-            max="100"
-            step="any"
-          />
+          <input type="number" id="examWeight" placeholder="e.g. 30" min="0" max="100" step="any" />
           <span class="unit">%</span>
         </div>
       </div>
@@ -308,17 +320,11 @@
       const desired = parseFloat(document.getElementById("desiredGrade").value);
       const weight = parseFloat(document.getElementById("examWeight").value);
 
-      // Check for blank or invalid fields
-      if (
-        Number.isNaN(current) ||
-        Number.isNaN(desired) ||
-        Number.isNaN(weight)
-      ) {
+      if (Number.isNaN(current) || Number.isNaN(desired) || Number.isNaN(weight)) {
         showMessage("Please fill in all three fields.", "error");
         return;
       }
 
-      // Validate percentage ranges
       if (current < 0 || current > 100) {
         showMessage("Current Grade must be between 0% and 100%.", "error");
         return;
@@ -334,17 +340,10 @@
         return;
       }
 
-      // Formula:
-      // desired = current × (1 - weight) + finalScore × weight
-      // finalScore = (desired - current × (1 - weight)) / weight
-
       const examWeight = weight / 100;
-      const requiredScore =
-        (desired - current * (1 - examWeight)) / examWeight;
-
+      const requiredScore = (desired - current * (1 - examWeight)) / examWeight;
       const roundedScore = Math.round(requiredScore * 100) / 100;
 
-      // Already achieved desired grade
       if (requiredScore <= 0) {
         score.textContent = "0%";
         result.classList.add("show");
@@ -355,7 +354,6 @@
         return;
       }
 
-      // Impossible score
       if (requiredScore > 100) {
         score.textContent = `${roundedScore}%`;
         result.classList.add("show");
@@ -366,7 +364,6 @@
         return;
       }
 
-      // Normal result
       score.textContent = `${roundedScore}%`;
       result.classList.add("show");
 
