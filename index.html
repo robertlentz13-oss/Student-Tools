@@ -10,7 +10,6 @@
   <style>
     :root {
       --bg: #080b14;
-      --bg-soft: #0d1220;
       --card: rgba(17, 24, 39, 0.78);
       --card-hover: #151e30;
       --border: rgba(148, 163, 184, 0.14);
@@ -67,9 +66,9 @@
       font: inherit;
     }
 
-    /* =========================================
+    /* ==============================
        BACKGROUND GLOW
-    ========================================= */
+    ============================== */
 
     .background-glow {
       position: fixed;
@@ -93,9 +92,9 @@
       background: rgba(139, 92, 246, 0.06);
     }
 
-    /* =========================================
+    /* ==============================
        APP
-    ========================================= */
+    ============================== */
 
     .app {
       width: min(1100px, calc(100% - 36px));
@@ -106,9 +105,9 @@
       flex-direction: column;
     }
 
-    /* =========================================
+    /* ==============================
        NAVBAR
-    ========================================= */
+    ============================== */
 
     nav {
       display: flex;
@@ -163,15 +162,13 @@
       font-weight: 600;
     }
 
-    /* =========================================
+    /* ==============================
        HERO
-    ========================================= */
+    ============================== */
 
     .hero {
       position: relative;
-
       text-align: center;
-
       padding: 70px 0 65px;
     }
 
@@ -181,7 +178,6 @@
       gap: 7px;
 
       padding: 7px 12px;
-
       margin-bottom: 20px;
 
       border: 1px solid rgba(99, 102, 241, 0.25);
@@ -207,7 +203,6 @@
 
     .hero h1 {
       max-width: 800px;
-
       margin: 0 auto 18px;
 
       font-size: clamp(40px, 7vw, 70px);
@@ -232,7 +227,6 @@
 
     .hero p {
       max-width: 610px;
-
       margin: 0 auto;
 
       color: var(--muted);
@@ -241,9 +235,9 @@
       line-height: 1.7;
     }
 
-    /* =========================================
+    /* ==============================
        TOOL SECTION
-    ========================================= */
+    ============================== */
 
     .tools-section {
       padding-bottom: 70px;
@@ -267,22 +261,21 @@
       font-size: 12px;
     }
 
-    /* =========================================
+    /* ==============================
        TOOL GRID
-    ========================================= */
+    ============================== */
 
     .tools-grid {
       display: grid;
-
       grid-template-columns:
         repeat(3, minmax(0, 1fr));
 
       gap: 16px;
     }
 
-    /* =========================================
+    /* ==============================
        TOOL CARD
-    ========================================= */
+    ============================== */
 
     .tool-card {
       position: relative;
@@ -291,7 +284,6 @@
       flex-direction: column;
 
       min-height: 300px;
-
       padding: 24px;
 
       border: 1px solid var(--border);
@@ -358,9 +350,9 @@
       transform: scale(1.4);
     }
 
-    /* =========================================
+    /* ==============================
        CARD ICON
-    ========================================= */
+    ============================== */
 
     .tool-icon {
       width: 48px;
@@ -395,9 +387,9 @@
         rgba(99, 102, 241, 0.18);
     }
 
-    /* =========================================
+    /* ==============================
        CARD CONTENT
-    ========================================= */
+    ============================== */
 
     .tool-card h3 {
       margin-bottom: 10px;
@@ -414,9 +406,9 @@
       line-height: 1.65;
     }
 
-    /* =========================================
+    /* ==============================
        CARD BUTTON
-    ========================================= */
+    ============================== */
 
     .tool-link {
       display: flex;
@@ -463,13 +455,12 @@
       transform: translateX(3px);
     }
 
-    /* =========================================
+    /* ==============================
        FOOTER
-    ========================================= */
+    ============================== */
 
     footer {
       margin-top: auto;
-
       padding: 24px 0;
 
       border-top: 1px solid var(--border);
@@ -477,13 +468,12 @@
       text-align: center;
 
       color: #64748b;
-
       font-size: 12px;
     }
 
-    /* =========================================
-       MOBILE
-    ========================================= */
+    /* ==============================
+       TABLET
+    ============================== */
 
     @media (max-width: 800px) {
 
@@ -499,6 +489,10 @@
         padding: 55px 0 50px;
       }
     }
+
+    /* ==============================
+       MOBILE
+    ============================== */
 
     @media (max-width: 500px) {
 
@@ -565,20 +559,18 @@
 
 <body>
 
-  <!-- Background decoration -->
   <div class="background-glow glow-one"></div>
   <div class="background-glow glow-two"></div>
 
-
   <div class="app">
 
-    <!-- =========================
-         NAVIGATION
-    ========================== -->
-
+    <!-- NAVIGATION -->
     <nav>
 
-      <a href="./index.html" class="brand">
+      <a
+        href="https://robertlentz13-oss.github.io/Student-Tools/"
+        class="brand"
+      >
 
         <div class="brand-icon">
           ✦
@@ -597,10 +589,7 @@
     </nav>
 
 
-    <!-- =========================
-         HERO
-    ========================== -->
-
+    <!-- HERO -->
     <header class="hero">
 
       <div class="hero-badge">
@@ -611,12 +600,10 @@
 
       </div>
 
-
       <h1>
         Student
         <span>Productivity Hub</span>
       </h1>
-
 
       <p>
         Everything you need to stay organized, track your grades,
@@ -626,10 +613,7 @@
     </header>
 
 
-    <!-- =========================
-         TOOLS
-    ========================== -->
-
+    <!-- TOOLS -->
     <section class="tools-section">
 
       <div class="section-heading">
@@ -648,10 +632,7 @@
       <div class="tools-grid">
 
 
-        <!-- =====================
-             FINAL GRADE
-        ====================== -->
-
+        <!-- FINAL GRADE CALCULATOR -->
         <article class="tool-card">
 
           <div class="tool-icon">
@@ -669,7 +650,7 @@
 
           <a
             class="tool-link"
-            href="./grade-calculator.html"
+            href="https://robertlentz13-oss.github.io/Student-Tools/FinalGradeCalculator.html"
           >
             Open Calculator
 
@@ -681,10 +662,7 @@
         </article>
 
 
-        <!-- =====================
-             GPA
-        ====================== -->
-
+        <!-- GPA CALCULATOR -->
         <article class="tool-card">
 
           <div class="tool-icon">
@@ -702,7 +680,7 @@
 
           <a
             class="tool-link"
-            href="./gpa-calculator.html"
+            href="https://robertlentz13-oss.github.io/Student-Tools/GPA_Calculator.html"
           >
             Open Calculator
 
@@ -714,10 +692,7 @@
         </article>
 
 
-        <!-- =====================
-             POMODORO
-        ====================== -->
-
+        <!-- POMODORO TIMER -->
         <article class="tool-card">
 
           <div class="tool-icon">
@@ -735,7 +710,7 @@
 
           <a
             class="tool-link"
-            href="./timer.html"
+            href="https://robertlentz13-oss.github.io/Student-Tools/PomodoroTimer.html"
           >
             Start Studying
 
@@ -752,10 +727,7 @@
     </section>
 
 
-    <!-- =========================
-         FOOTER
-    ========================== -->
-
+    <!-- FOOTER -->
     <footer>
       Built for students, by students.
     </footer>
@@ -766,10 +738,8 @@
   <script>
 
     /*
-      Small interaction enhancement:
-      Clicking a tool card anywhere opens its
-      associated tool, while keeping the actual
-      button/link accessible.
+      Clicking anywhere on a card also opens
+      the corresponding tool.
     */
 
     document
@@ -779,15 +749,9 @@
         const link =
           card.querySelector(".tool-link");
 
-
         card.addEventListener(
           "click",
           event => {
-
-            /*
-              Don't trigger twice when the
-              actual link is clicked.
-            */
 
             if (
               event.target.closest(".tool-link")
@@ -796,37 +760,6 @@
             }
 
             link.click();
-
-          }
-        );
-
-      });
-
-
-    /*
-      Add a subtle keyboard focus effect.
-      The actual navigation remains standard
-      browser behavior.
-    */
-
-    document
-      .querySelectorAll(".tool-link")
-      .forEach(link => {
-
-        link.addEventListener(
-          "keydown",
-          event => {
-
-            if (
-              event.key === "Enter" ||
-              event.key === " "
-            ) {
-
-              event.preventDefault();
-
-              link.click();
-
-            }
 
           }
         );
