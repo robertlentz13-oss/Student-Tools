@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#090d16">
+  <title>Pomodoro Study Timer</title>
+
+  <style>
+    :root {
+      --bg: #090d16;
+      --card: #111827;
+      --card-light: #151e2d;
+      --border: #263244;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --accent: #6366f1;
+      --accent-hover: #4f46e5;
+      --success: #22c55e;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+      background:
+        radial-gradient(
+          circle at top,
+          rgba(99, 102, 241, 0.13),
+          transparent 40%
+        ),
+        var(--bg);
+      color: var(--text);
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 520px;
+    }
+
+    /* ==========================
+       HEADER
+    ========================== */
+
+    .header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .header h1 {
+      font-size: 30px;
+      letter-spacing: -0.8px;
+      margin-bottom: 7px;
+    }
+
+    .header p {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* ==========================
+       MAIN CARD
+    ========================== */
+
+    .timer-card {
+      padding: 28px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      box-shadow:
+        0 25px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    /* ==========================
+       MODE BUTTONS
+    ========================== */
+
+    .modes {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      padding: 5px;
+      margin-bottom: 34px;
+
+      background: #0c1422;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+    }
+
+    .mode-btn {
+      border: none;
+      border-radius: 9px;
+      padding: 10px 7px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+    }
+
+    .mode-btn:hover {
+      color: var(--text);
+    }
+
+    .mode-btn.active {
+      background: var(--accent);
+      color: white;
+      box-shadow:
+        0 5px 15px rgba(99, 102, 241, 0.22);
+    }
+
+    /* ==========================
+       CURRENT MODE
+    ========================== */
+
+    .mode-label {
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    /* ==========================
+       TIMER
+    ========================== */
+
+    .timer {
+      text-align: center;
+      font-size: clamp(72px, 18vw, 120px);
+      line-height: 1;
+      font-weight: 800;
+      letter-spacing: -5px;
+      font-variant-numeric: tabular-nums;
+      margin: 5px 0 28px;
+    }
+
+    /* ==========================
+       CONTROLS
+    ========================== */
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .control-btn {
+      height: 50px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 750;
+      transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
+    }
+
+    .control-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .start-btn {
+      background: var(--accent);
+      color: white;
+      box-shadow:
+        0 8px 20px rgba(99, 102, 241, 0.2);
+    }
+
+    .start-btn:hover {
+      background: var(--accent-hover);
+      box-shadow:
+        0 10px 25px rgba(79, 70, 229, 0.3);
+    }
+
+    .pause-btn {
+      background: #1e293b;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .pause-btn:hover {
+      background: #263449;
+    }
+
+    .reset-btn {
+      grid-column: 1 / -1;
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
+    .reset-btn:hover {
+      color: var(--text);
+      background: #151e2d;
+    }
+
+    /* ==========================
+       SESSION COUNTER
+    ========================== */
+
+    .session-area {
+      margin-top: 28px;
+      padding-top: 22px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .session-label {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 9px;
+    }
+
+    .session-count {
+      font-size: 24px;
+      font-weight: 800;
+    }
+
+    .session-count span {
+      color: var(--accent);
+    }
+
+    /* ==========================
+       PROGRESS DOTS
+    ========================== */
+
+    .dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #263244;
+      transition: 0.25s ease;
+    }
+
+    .dot.completed {
+      background: var(--success);
+      transform: scale(1.1);
+    }
+
+    /* ==========================
+       MOBILE
+    ========================== */
+
+    @media (max-width: 480px) {
+      body {
+        padding: 14px;
+        align-items: center;
+      }
+
+      .header h1 {
+        font-size: 26px;
+      }
+
+      .header p {
+        font-size: 13px;
+      }
+
+      .timer-card {
+        padding: 20px 16px;
+        border-radius: 18px;
+      }
+
+      .modes {
+        margin-bottom: 28px;
+      }
+
+      .mode-btn {
+        font-size: 12px;
+        padding: 10px 4px;
+      }
+
+      .timer {
+        font-size: clamp(64px, 21vw, 92px);
+        letter-spacing: -4px;
+        margin-bottom: 25px;
+      }
+
+      .control-btn {
+        height: 48px;
+      }
+
+      .session-area {
+        margin-top: 24px;
+        padding-top: 20px;
+      }
+    }
+
+    @media (max-width: 350px) {
+      .timer-card {
+        padding: 18px 12px;
+      }
+
+      .timer {
+        font-size: 62px;
+      }
+
+      .mode-btn {
+        font-size: 11px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="app">
+
+    <header class="header">
+      <h1>Pomodoro Study Timer</h1>
+      <p>Focus on the task. Take a break. Repeat.</p>
+    </header>
+
+
+    <section class="timer-card">
+
+      <!-- MODE PRESETS -->
+      <div class="modes">
+
+        <button
+          class="mode-btn active"
+          data-mode="work"
+          type="button"
+        >
+          Work
+        </button>
+
+        <button
+          class="mode-btn"
+          data-mode="short"
+          type="button"
+        >
+          Short Break
+        </button>
+
+        <button
+          class="mode-btn"
+          data-mode="long"
+          type="button"
+        >
+          Long Break
+        </button>
+
+      </div>
+
+
+      <!-- CURRENT MODE -->
+      <div
+        class="mode-label"
+        id="modeLabel"
+      >
+        Work Session
+      </div>
+
+
+      <!-- TIMER -->
+      <div
+        class="timer"
+        id="timer"
+        aria-live="polite"
+      >
+        25:00
+      </div>
+
+
+      <!-- CONTROLS -->
+      <div class="controls">
+
+        <button
+          class="control-btn start-btn"
+          id="startBtn"
+          type="button"
+        >
+          Start
+        </button>
+
+        <button
+          class="control-btn pause-btn"
+          id="pauseBtn"
+          type="button"
+        >
+          Pause
+        </button>
+
+        <button
+          class="control-btn reset-btn"
+          id="resetBtn"
+          type="button"
+        >
+          Reset
+        </button>
+
+      </div>
+
+
+      <!-- SESSION COUNTER -->
+      <div class="session-area">
+
+        <div class="session-label">
+          Completed Work Sessions
+        </div>
+
+        <div class="session-count">
+          <span id="sessionCount">0</span>
+        </div>
+
+        <div
+          class="dots"
+          id="dots"
+          aria-hidden="true"
+        ></div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <script>
+
+    /* =========================================
+       SETTINGS
+    ========================================= */
+
+    const durations = {
+      work: 25 * 60,
+      short: 5 * 60,
+      long: 15 * 60
+    };
+
+
+    const modeNames = {
+      work: "Work Session",
+      short: "Short Break",
+      long: "Long Break"
+    };
+
+
+    /* =========================================
+       ELEMENTS
+    ========================================= */
+
+    const timerElement =
+      document.getElementById("timer");
+
+    const modeLabel =
+      document.getElementById("modeLabel");
+
+    const startBtn =
+      document.getElementById("startBtn");
+
+    const pauseBtn =
+      document.getElementById("pauseBtn");
+
+    const resetBtn =
+      document.getElementById("resetBtn");
+
+    const sessionCountElement =
+      document.getElementById("sessionCount");
+
+    const dotsElement =
+      document.getElementById("dots");
+
+    const modeButtons =
+      document.querySelectorAll(".mode-btn");
+
+
+    /* =========================================
+       STATE
+    ========================================= */
+
+    let currentMode = "work";
+
+    let remainingSeconds =
+      durations.work;
+
+    let timerInterval = null;
+
+    let isRunning = false;
+
+    let completedSessions = 0;
+
+
+    /* =========================================
+       DISPLAY TIMER
+    ========================================= */
+
+    function updateTimerDisplay() {
+
+      const minutes =
+        Math.floor(remainingSeconds / 60);
+
+      const seconds =
+        remainingSeconds % 60;
+
+      timerElement.textContent =
+        `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+
+      /*
+        Update browser tab title too.
+      */
+
+      document.title =
+        `${timerElement.textContent} • ${modeNames[currentMode]}`;
+
+    }
+
+
+    /* =========================================
+       UPDATE SESSION DOTS
+    ========================================= */
+
+    function updateDots() {
+
+      dotsElement.innerHTML = "";
+
+      /*
+        Display up to four dots.
+        A standard Pomodoro cycle has
+        four work sessions.
+      */
+
+      const visibleDots =
+        Math.min(
+          Math.max(completedSessions + 1, 1),
+          4
+        );
+
+
+      for (let i = 0; i < visibleDots; i++) {
+
+        const dot =
+          document.createElement("div");
+
+        dot.className = "dot";
+
+
+        if (i < completedSessions % 4) {
+          dot.classList.add("completed");
+        }
+
+
+        dotsElement.appendChild(dot);
+      }
+    }
+
+
+    /* =========================================
+       SOUND
+    ========================================= */
+
+    function playBeep() {
+
+      /*
+        Use the Web Audio API.
+        No external sound file is required.
+      */
+
+      try {
+
+        const AudioContext =
+          window.AudioContext ||
+          window.webkitAudioContext;
+
+        if (!AudioContext) return;
+
+        const audioContext =
+          new AudioContext();
+
+        const oscillator =
+          audioContext.createOscillator();
+
+        const gain =
+          audioContext.createGain();
+
+
+        oscillator.type = "sine";
+
+        oscillator.frequency.setValueAtTime(
+          660,
+          audioContext.currentTime
+        );
+
+        gain.gain.setValueAtTime(
+          0.001,
+          audioContext.currentTime
+        );
+
+        gain.gain.exponentialRampToValueAtTime(
+          0.25,
+          audioContext.currentTime + 0.03
+        );
+
+        gain.gain.exponentialRampToValueAtTime(
+          0.001,
+          audioContext.currentTime + 0.5
+        );
+
+
+        oscillator.connect(gain);
+
+        gain.connect(
+          audioContext.destination
+        );
+
+
+        oscillator.start();
+
+        oscillator.stop(
+          audioContext.currentTime + 0.5
+        );
+
+      } catch (error) {
+        console.log("Audio unavailable.");
+      }
+    }
+
+
+    /* =========================================
+       NOTIFICATION
+    ========================================= */
+
+    function showNotification() {
+
+      /*
+        Browser notifications only work if
+        permission has been granted.
+      */
+
+      if (
+        "Notification" in window &&
+        Notification.permission === "granted"
+      ) {
+
+        new Notification(
+          `${modeNames[currentMode]} complete!`,
+          {
+            body:
+              currentMode === "work"
+                ? "Great work! Time for a break."
+                : "Break finished. Ready to focus?"
+          }
+        );
+
+      }
+
+    }
+
+
+    /* =========================================
+       TIMER FINISHED
+    ========================================= */
+
+    function timerFinished() {
+
+      clearInterval(timerInterval);
+
+      timerInterval = null;
+
+      isRunning = false;
+
+      playBeep();
+
+      showNotification();
+
+
+      /*
+        Count completed Work sessions.
+      */
+
+      if (currentMode === "work") {
+
+        completedSessions++;
+
+        sessionCountElement.textContent =
+          completedSessions;
+
+        updateDots();
+
+      }
+
+
+      /*
+        Automatically choose the next mode.
+
+        Work → Short Break
+        Short Break → Work
+        Long Break → Work
+      */
+
+      if (currentMode === "work") {
+
+        setMode("short", true);
+
+      } else {
+
+        setMode("work", true);
+
+      }
+
+    }
+
+
+    /* =========================================
+       START TIMER
+    ========================================= */
+
+    function startTimer() {
+
+      if (isRunning) return;
+
+      isRunning = true;
+
+
+      /*
+        Request notification permission
+        after a user clicks Start.
+      */
+
+      if (
+        "Notification" in window &&
+        Notification.permission === "default"
+      ) {
+
+        Notification.requestPermission();
+
+      }
+
+
+      timerInterval =
+        setInterval(() => {
+
+          if (remainingSeconds > 0) {
+
+            remainingSeconds--;
+
+            updateTimerDisplay();
+
+          } else {
+
+            timerFinished();
+
+          }
+
+        }, 1000);
+
+    }
+
+
+    /* =========================================
+       PAUSE TIMER
+    ========================================= */
+
+    function pauseTimer() {
+
+      if (!isRunning) return;
+
+      clearInterval(timerInterval);
+
+      timerInterval = null;
+
+      isRunning = false;
+
+    }
+
+
+    /* =========================================
+       RESET TIMER
+    ========================================= */
+
+    function resetTimer() {
+
+      clearInterval(timerInterval);
+
+      timerInterval = null;
+
+      isRunning = false;
+
+      remainingSeconds =
+        durations[currentMode];
+
+      updateTimerDisplay();
+
+    }
+
+
+    /* =========================================
+       CHANGE MODE
+    ========================================= */
+
+    function setMode(mode, automatic = false) {
+
+      clearInterval(timerInterval);
+
+      timerInterval = null;
+
+      isRunning = false;
+
+      currentMode = mode;
+
+      remainingSeconds =
+        durations[mode];
+
+
+      /*
+        Update active mode button.
+      */
+
+      modeButtons.forEach(button => {
+
+        button.classList.toggle(
+          "active",
+          button.dataset.mode === mode
+        );
+
+      });
+
+
+      modeLabel.textContent =
+        modeNames[mode];
+
+
+      updateTimerDisplay();
+
+
+      /*
+        When the timer automatically switches
+        modes, don't automatically start it.
+      */
+
+      if (automatic) {
+
+        /*
+          Give the user a short visual indication
+          without forcing the next timer to start.
+        */
+
+        timerElement.animate(
+          [
+            { transform: "scale(1)" },
+            { transform: "scale(1.04)" },
+            { transform: "scale(1)" }
+          ],
+          {
+            duration: 400,
+            easing: "ease-out"
+          }
+        );
+
+      }
+
+    }
+
+
+    /* =========================================
+       MODE BUTTON EVENTS
+    ========================================= */
+
+    modeButtons.forEach(button => {
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          setMode(
+            button.dataset.mode
+          );
+
+        }
+      );
+
+    });
+
+
+    /* =========================================
+       CONTROL EVENTS
+    ========================================= */
+
+    startBtn.addEventListener(
+      "click",
+      startTimer
+    );
+
+    pauseBtn.addEventListener(
+      "click",
+      pauseTimer
+    );
+
+    resetBtn.addEventListener(
+      "click",
+      resetTimer
+    );
+
+
+    /* =========================================
+       INITIALIZE
+    ========================================= */
+
+    updateTimerDisplay();
+
+    updateDots();
+
+  </script>
+
+</body>
+</html>
