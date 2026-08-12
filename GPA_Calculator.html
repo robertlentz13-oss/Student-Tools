@@ -64,6 +64,43 @@
     }
 
     /* ==============================
+       HOME BUTTON
+    ============================== */
+
+    .home-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+
+      margin-bottom: 20px;
+      padding: 9px 14px;
+
+      border: 1px solid var(--border);
+      border-radius: 10px;
+
+      background: var(--card);
+      color: var(--muted);
+
+      font-size: 13px;
+      font-weight: 700;
+
+      text-decoration: none;
+
+      transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+    }
+
+    .home-btn:hover {
+      background: #1e293b;
+      border-color: var(--accent);
+      color: var(--text);
+      transform: translateX(-2px);
+    }
+
+    /* ==============================
        HEADER
     ============================== */
 
@@ -385,7 +422,6 @@
         grid-column: 1 / -1;
       }
 
-      /* Hide desktop headings */
       .table-head {
         display: none;
       }
@@ -394,28 +430,13 @@
         padding: 12px;
       }
 
-      /*
-        ===========================================
-        MOBILE COURSE CARD
-
-        IMPORTANT:
-        No absolute positioning.
-        No negative margins.
-
-        The delete button has its own grid cell.
-        ===========================================
-      */
-
       .course-row {
         display: grid;
 
-        /*
-          Three columns:
-          - Grade
-          - Course Type
-          - Delete
-        */
-        grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr) 44px;
+        grid-template-columns:
+          minmax(0, 1fr)
+          minmax(0, 1.3fr)
+          44px;
 
         gap: 10px;
 
@@ -433,34 +454,17 @@
         margin-bottom: 0;
       }
 
-      /*
-        Course name gets a COMPLETE row.
-      */
-
       .course-name {
         grid-column: 1 / -1;
       }
-
-      /*
-        Grade gets column 1.
-      */
 
       .grade {
         grid-column: 1;
       }
 
-      /*
-        Course type gets column 2.
-      */
-
       .course-type {
         grid-column: 2;
       }
-
-      /*
-        Delete button gets column 3.
-        It cannot overlap the dropdowns.
-      */
 
       .delete-btn {
         grid-column: 3;
@@ -477,6 +481,10 @@
 
       body {
         padding: 14px 9px 30px;
+      }
+
+      .home-btn {
+        margin-bottom: 16px;
       }
 
       .header h1 {
@@ -559,11 +567,6 @@
     @media (max-width: 340px) {
 
       .course-row {
-        /*
-          On extremely narrow phones,
-          stack the controls instead of squeezing them.
-        */
-
         grid-template-columns: 1fr 44px;
       }
 
@@ -595,6 +598,15 @@
 <body>
 
   <main class="app">
+
+    <!-- HOME BUTTON -->
+    <a
+      href="https://robertlentz13-oss.github.io/Student-Tools/"
+      class="home-btn"
+    >
+      ← Home
+    </a>
+
 
     <!-- HEADER -->
     <header class="header">
