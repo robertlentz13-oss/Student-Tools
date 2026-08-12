@@ -1,0 +1,595 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>High School GPA Calculator</title>
+
+  <style>
+    :root {
+      --bg: #090d16;
+      --card: #111827;
+      --card-2: #0f172a;
+      --border: #263244;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --accent: #6366f1;
+      --accent-hover: #4f46e5;
+      --danger: #ef4444;
+      --success: #22c55e;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      padding: 30px 18px;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(99, 102, 241, 0.12), transparent 35%),
+        var(--bg);
+      color: var(--text);
+    }
+
+    .app {
+      width: 100%;
+      max-width: 1050px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    .header h1 {
+      font-size: clamp(26px, 4vw, 36px);
+      letter-spacing: -1px;
+      margin-bottom: 7px;
+    }
+
+    .header p {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .scale-control {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--card);
+    }
+
+    .scale-control button {
+      border: none;
+      border-radius: 8px;
+      padding: 9px 13px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .scale-control button.active {
+      background: var(--accent);
+      color: white;
+    }
+
+    .scale-control button:hover:not(.active) {
+      color: var(--text);
+      background: #1e293b;
+    }
+
+    /* GPA Summary */
+    .summary {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .summary-card {
+      min-height: 125px;
+      padding: 22px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: var(--card);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.18);
+    }
+
+    .summary-card.primary {
+      background:
+        linear-gradient(145deg, rgba(99, 102, 241, 0.18), transparent),
+        var(--card);
+    }
+
+    .summary-label {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+
+    .gpa-value {
+      font-size: 42px;
+      line-height: 1;
+      font-weight: 800;
+      letter-spacing: -1.5px;
+    }
+
+    .summary-number {
+      font-size: 25px;
+      font-weight: 750;
+    }
+
+    /* Courses */
+    .courses-card {
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: var(--card);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.18);
+    }
+
+    .courses-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      padding: 20px 22px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .courses-header h2 {
+      font-size: 18px;
+    }
+
+    .add-btn {
+      border: none;
+      border-radius: 10px;
+      padding: 10px 15px;
+      background: var(--accent);
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .add-btn:hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 7px 18px rgba(79, 70, 229, 0.3);
+    }
+
+    .course-table-header {
+      display: grid;
+      grid-template-columns: minmax(180px, 1.5fr) 130px minmax(150px, 1fr) 55px;
+      gap: 12px;
+      padding: 14px 22px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      background: var(--card-2);
+    }
+
+    #courses {
+      padding: 0 22px;
+    }
+
+    .course-row {
+      display: grid;
+      grid-template-columns: minmax(180px, 1.5fr) 130px minmax(150px, 1fr) 55px;
+      gap: 12px;
+      align-items: center;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(38, 50, 68, 0.65);
+      animation: rowIn 0.25s ease;
+    }
+
+    .course-row:last-child {
+      border-bottom: none;
+    }
+
+    input,
+    select {
+      width: 100%;
+      height: 44px;
+      padding: 0 12px;
+      border: 1px solid #334155;
+      border-radius: 10px;
+      outline: none;
+      background: #0f172a;
+      color: var(--text);
+      font: inherit;
+      font-size: 14px;
+      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+
+    input::placeholder {
+      color: #64748b;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: var(--accent);
+      background: #111b30;
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+    }
+
+    select {
+      cursor: pointer;
+    }
+
+    .delete-btn {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      border-radius: 10px;
+      background: rgba(239, 68, 68, 0.08);
+      color: #f87171;
+      font-size: 17px;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .delete-btn:hover {
+      background: rgba(239, 68, 68, 0.16);
+      border-color: rgba(239, 68, 68, 0.4);
+      transform: scale(1.04);
+    }
+
+    .empty-state {
+      padding: 45px 20px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .empty-state strong {
+      display: block;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .footer-note {
+      margin-top: 14px;
+      color: #64748b;
+      text-align: center;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    @keyframes rowIn {
+      from {
+        opacity: 0;
+        transform: translateY(-6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 760px) {
+      .header {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .scale-control {
+        align-self: stretch;
+      }
+
+      .scale-control button {
+        flex: 1;
+      }
+
+      .summary {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .summary-card.primary {
+        grid-column: 1 / -1;
+      }
+
+      .course-table-header {
+        display: none;
+      }
+
+      #courses {
+        padding: 12px;
+      }
+
+      .course-row {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        padding: 14px 0;
+        margin-bottom: 2px;
+      }
+
+      .course-row input {
+        grid-column: 1 / -1;
+      }
+
+      .course-row select:nth-child(2) {
+        grid-column: 1;
+      }
+
+      .course-row select:nth-child(3) {
+        grid-column: 2;
+      }
+
+      .delete-btn {
+        grid-column: 2;
+        justify-self: end;
+        margin-top: -52px;
+        transform: translateY(0);
+      }
+
+      .delete-btn:hover {
+        transform: scale(1.04);
+      }
+    }
+
+    @media (max-width: 430px) {
+      body {
+        padding: 18px 12px;
+      }
+
+      .summary {
+        grid-template-columns: 1fr;
+      }
+
+      .summary-card.primary {
+        grid-column: auto;
+      }
+
+      .summary-card {
+        min-height: auto;
+      }
+
+      .gpa-value {
+        font-size: 36px;
+      }
+
+      .courses-header {
+        padding: 17px;
+      }
+
+      .courses-header h2 {
+        font-size: 16px;
+      }
+
+      .add-btn {
+        padding: 9px 11px;
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="app">
+
+    <header class="header">
+      <div>
+        <h1>High School GPA Calculator</h1>
+        <p>Add your courses and grades to calculate your GPA instantly.</p>
+      </div>
+
+      <div class="scale-control" aria-label="GPA scale">
+        <button id="unweightedBtn" class="active" type="button">
+          Unweighted 4.0
+        </button>
+        <button id="weightedBtn" type="button">
+          Weighted 5.0
+        </button>
+      </div>
+    </header>
+
+    <section class="summary">
+      <div class="summary-card primary">
+        <div class="summary-label">Overall GPA</div>
+        <div class="gpa-value" id="gpaValue">0.00</div>
+      </div>
+
+      <div class="summary-card">
+        <div class="summary-label">Courses</div>
+        <div class="summary-number" id="courseCount">0</div>
+      </div>
+
+      <div class="summary-card">
+        <div class="summary-label">Total Grade Points</div>
+        <div class="summary-number" id="totalPoints">0.00</div>
+      </div>
+    </section>
+
+    <section class="courses-card">
+      <div class="courses-header">
+        <h2>Your Courses</h2>
+        <button class="add-btn" id="addCourseBtn" type="button">
+          + Add Course
+        </button>
+      </div>
+
+      <div class="course-table-header">
+        <div>Course Name</div>
+        <div>Grade</div>
+        <div>Course Type</div>
+        <div></div>
+      </div>
+
+      <div id="courses"></div>
+    </section>
+
+    <p class="footer-note">
+      GPA is calculated using the standard 4.0 scale. Honors courses add
+      0.5 points and AP/IB courses add 1.0 point when Weighted GPA is selected.
+    </p>
+  </main>
+
+  <script>
+    const coursesContainer = document.getElementById("courses");
+    const addCourseBtn = document.getElementById("addCourseBtn");
+    const unweightedBtn = document.getElementById("unweightedBtn");
+    const weightedBtn = document.getElementById("weightedBtn");
+
+    const gpaValue = document.getElementById("gpaValue");
+    const courseCount = document.getElementById("courseCount");
+    const totalPoints = document.getElementById("totalPoints");
+
+    let weighted = false;
+
+    /*
+      Standard GPA values.
+
+      Unweighted:
+      A = 4.0
+      B = 3.0
+      C = 2.0
+      D = 1.0
+      F = 0.0
+
+      Weighted:
+      Honors = +0.5
+      AP/IB = +1.0
+    */
+    const gradePoints = {
+      A: 4.0,
+      B: 3.0,
+      C: 2.0,
+      D: 1.0,
+      F: 0.0
+    };
+
+    const courseTypes = {
+      Regular: 0,
+      Honors: 0.5,
+      "AP / IB": 1.0
+    };
+
+    function createCourseRow() {
+      const row = document.createElement("div");
+      row.className = "course-row";
+
+      row.innerHTML = `
+        <input
+          type="text"
+          class="course-name"
+          placeholder="e.g. Algebra II"
+          aria-label="Course name"
+        />
+
+        <select class="grade" aria-label="Letter grade">
+          <option value="A">A</option>
+          <option value="B">B</option>
+          <option value="C">C</option>
+          <option value="D">D</option>
+          <option value="F">F</option>
+        </select>
+
+        <select class="course-type" aria-label="Course type">
+          <option value="Regular">Regular</option>
+          <option value="Honors">Honors (+0.5)</option>
+          <option value="AP / IB">AP / IB (+1.0)</option>
+        </select>
+
+        <button
+          class="delete-btn"
+          type="button"
+          aria-label="Delete course"
+          title="Delete course"
+        >
+          ✕
+        </button>
+      `;
+
+      row.querySelectorAll("input, select").forEach(element => {
+        element.addEventListener("input", calculateGPA);
+        element.addEventListener("change", calculateGPA);
+      });
+
+      row.querySelector(".delete-btn").addEventListener("click", () => {
+        row.remove();
+        calculateGPA();
+      });
+
+      coursesContainer.appendChild(row);
+      calculateGPA();
+    }
+
+    function calculateGPA() {
+      const rows = [...document.querySelectorAll(".course-row")];
+
+      let points = 0;
+      let count = 0;
+
+      rows.forEach(row => {
+        const grade = row.querySelector(".grade").value;
+        const type = row.querySelector(".course-type").value;
+
+        let pointsForCourse = gradePoints[grade];
+
+        if (weighted) {
+          pointsForCourse += courseTypes[type];
+        }
+
+        points += pointsForCourse;
+        count++;
+      });
+
+      const gpa = count > 0 ? points / count : 0;
+
+      const maxScale = weighted ? 5 : 4;
+
+      // Safety clamp so the visual result never exceeds the selected scale.
+      const displayedGPA = Math.min(gpa, maxScale);
+
+      gpaValue.textContent = displayedGPA.toFixed(2);
+      courseCount.textContent = count;
+      totalPoints.textContent = points.toFixed(2);
+    }
+
+    function setScale(isWeighted) {
+      weighted = isWeighted;
+
+      unweightedBtn.classList.toggle("active", !weighted);
+      weightedBtn.classList.toggle("active", weighted);
+
+      calculateGPA();
+    }
+
+    addCourseBtn.addEventListener("click", createCourseRow);
+
+    unweightedBtn.addEventListener("click", () => {
+      setScale(false);
+    });
+
+    weightedBtn.addEventListener("click", () => {
+      setScale(true);
+    });
+
+    // Start with three course rows.
+    createCourseRow();
+    createCourseRow();
+    createCourseRow();
+  </script>
+</body>
+</html>
