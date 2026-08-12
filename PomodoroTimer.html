@@ -57,6 +57,43 @@
     }
 
     /* ==========================
+       HOME BUTTON
+    ========================== */
+
+    .home-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+
+      margin-bottom: 18px;
+      padding: 9px 14px;
+
+      border: 1px solid var(--border);
+      border-radius: 10px;
+
+      background: var(--card);
+      color: var(--muted);
+
+      font-size: 13px;
+      font-weight: 700;
+
+      text-decoration: none;
+
+      transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+    }
+
+    .home-btn:hover {
+      background: #1e293b;
+      border-color: var(--accent);
+      color: var(--text);
+      transform: translateX(-2px);
+    }
+
+    /* ==========================
        HEADER
     ========================== */
 
@@ -278,6 +315,10 @@
         align-items: center;
       }
 
+      .home-btn {
+        margin-bottom: 14px;
+      }
+
       .header h1 {
         font-size: 26px;
       }
@@ -335,6 +376,15 @@
 <body>
 
   <main class="app">
+
+    <!-- HOME BUTTON -->
+    <a
+      href="https://robertlentz13-oss.github.io/Student-Tools/"
+      class="home-btn"
+    >
+      ← Home
+    </a>
+
 
     <header class="header">
       <h1>Pomodoro Study Timer</h1>
@@ -527,10 +577,6 @@
       timerElement.textContent =
         `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
 
-      /*
-        Update browser tab title too.
-      */
-
       document.title =
         `${timerElement.textContent} • ${modeNames[currentMode]}`;
 
@@ -544,12 +590,6 @@
     function updateDots() {
 
       dotsElement.innerHTML = "";
-
-      /*
-        Display up to four dots.
-        A standard Pomodoro cycle has
-        four work sessions.
-      */
 
       const visibleDots =
         Math.min(
@@ -581,11 +621,6 @@
     ========================================= */
 
     function playBeep() {
-
-      /*
-        Use the Web Audio API.
-        No external sound file is required.
-      */
 
       try {
 
@@ -653,11 +688,6 @@
 
     function showNotification() {
 
-      /*
-        Browser notifications only work if
-        permission has been granted.
-      */
-
       if (
         "Notification" in window &&
         Notification.permission === "granted"
@@ -674,7 +704,6 @@
         );
 
       }
-
     }
 
 
@@ -695,10 +724,6 @@
       showNotification();
 
 
-      /*
-        Count completed Work sessions.
-      */
-
       if (currentMode === "work") {
 
         completedSessions++;
@@ -710,14 +735,6 @@
 
       }
 
-
-      /*
-        Automatically choose the next mode.
-
-        Work → Short Break
-        Short Break → Work
-        Long Break → Work
-      */
 
       if (currentMode === "work") {
 
@@ -742,11 +759,6 @@
 
       isRunning = true;
 
-
-      /*
-        Request notification permission
-        after a user clicks Start.
-      */
 
       if (
         "Notification" in window &&
@@ -833,10 +845,6 @@
         durations[mode];
 
 
-      /*
-        Update active mode button.
-      */
-
       modeButtons.forEach(button => {
 
         button.classList.toggle(
@@ -854,17 +862,7 @@
       updateTimerDisplay();
 
 
-      /*
-        When the timer automatically switches
-        modes, don't automatically start it.
-      */
-
       if (automatic) {
-
-        /*
-          Give the user a short visual indication
-          without forcing the next timer to start.
-        */
 
         timerElement.animate(
           [
