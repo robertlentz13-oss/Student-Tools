@@ -1,9 +1,9 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <meta name="theme-color" content="#090d16" />
   <title>High School GPA Calculator</title>
 
   <style>
@@ -12,12 +12,13 @@
       --card: #111827;
       --card-2: #0f172a;
       --border: #263244;
+      --input-border: #334155;
       --text: #f8fafc;
       --muted: #94a3b8;
       --accent: #6366f1;
       --accent-hover: #4f46e5;
       --danger: #ef4444;
-      --success: #22c55e;
+      --danger-bg: rgba(239, 68, 68, 0.09);
     }
 
     * {
@@ -26,15 +27,29 @@
       padding: 0;
     }
 
+    html {
+      -webkit-text-size-adjust: 100%;
+    }
+
     body {
       min-height: 100vh;
       padding: 30px 18px;
       font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont,
         "Segoe UI", sans-serif;
       background:
-        radial-gradient(circle at top left, rgba(99, 102, 241, 0.12), transparent 35%),
+        radial-gradient(
+          circle at top left,
+          rgba(99, 102, 241, 0.12),
+          transparent 35%
+        ),
         var(--bg);
       color: var(--text);
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
     }
 
     .app {
@@ -43,7 +58,10 @@
       margin: 0 auto;
     }
 
-    /* Header */
+    /* =========================
+       HEADER
+    ========================= */
+
     .header {
       display: flex;
       align-items: flex-end;
@@ -61,16 +79,22 @@
     .header p {
       color: var(--muted);
       font-size: 14px;
+      line-height: 1.5;
     }
+
+    /* =========================
+       SCALE TOGGLE
+    ========================= */
 
     .scale-control {
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 6px;
+      gap: 5px;
+      padding: 5px;
       border: 1px solid var(--border);
       border-radius: 12px;
       background: var(--card);
+      flex-shrink: 0;
     }
 
     .scale-control button {
@@ -95,7 +119,10 @@
       background: #1e293b;
     }
 
-    /* GPA Summary */
+    /* =========================
+       GPA SUMMARY
+    ========================= */
+
     .summary {
       display: grid;
       grid-template-columns: 1.2fr 1fr 1fr;
@@ -136,7 +163,10 @@
       font-weight: 750;
     }
 
-    /* Courses */
+    /* =========================
+       COURSES CONTAINER
+    ========================= */
+
     .courses-card {
       overflow: hidden;
       border: 1px solid var(--border);
@@ -175,9 +205,17 @@
       box-shadow: 0 7px 18px rgba(79, 70, 229, 0.3);
     }
 
+    /* =========================
+       DESKTOP COURSE TABLE
+    ========================= */
+
     .course-table-header {
       display: grid;
-      grid-template-columns: minmax(180px, 1.5fr) 130px minmax(150px, 1fr) 55px;
+      grid-template-columns:
+        minmax(180px, 1.5fr)
+        130px
+        minmax(150px, 1fr)
+        55px;
       gap: 12px;
       padding: 14px 22px;
       color: var(--muted);
@@ -194,7 +232,11 @@
 
     .course-row {
       display: grid;
-      grid-template-columns: minmax(180px, 1.5fr) 130px minmax(150px, 1fr) 55px;
+      grid-template-columns:
+        minmax(180px, 1.5fr)
+        130px
+        minmax(150px, 1fr)
+        55px;
       gap: 12px;
       align-items: center;
       padding: 14px 0;
@@ -206,19 +248,25 @@
       border-bottom: none;
     }
 
+    /* =========================
+       INPUTS
+    ========================= */
+
     input,
     select {
       width: 100%;
       height: 44px;
       padding: 0 12px;
-      border: 1px solid #334155;
+      border: 1px solid var(--input-border);
       border-radius: 10px;
       outline: none;
       background: #0f172a;
       color: var(--text);
-      font: inherit;
       font-size: 14px;
-      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+      transition:
+        border-color 0.2s,
+        box-shadow 0.2s,
+        background 0.2s;
     }
 
     input::placeholder {
@@ -236,6 +284,10 @@
       cursor: pointer;
     }
 
+    /* =========================
+       DELETE BUTTON
+    ========================= */
+
     .delete-btn {
       width: 42px;
       height: 42px;
@@ -243,18 +295,25 @@
       place-items: center;
       border: 1px solid rgba(239, 68, 68, 0.2);
       border-radius: 10px;
-      background: rgba(239, 68, 68, 0.08);
+      background: var(--danger-bg);
       color: #f87171;
       font-size: 17px;
       cursor: pointer;
-      transition: 0.2s ease;
+      transition:
+        background 0.2s,
+        border-color 0.2s,
+        transform 0.2s;
     }
 
     .delete-btn:hover {
-      background: rgba(239, 68, 68, 0.16);
+      background: rgba(239, 68, 68, 0.17);
       border-color: rgba(239, 68, 68, 0.4);
       transform: scale(1.04);
     }
+
+    /* =========================
+       EMPTY STATE
+    ========================= */
 
     .empty-state {
       padding: 45px 20px;
@@ -276,25 +335,38 @@
       line-height: 1.5;
     }
 
+    /* =========================
+       ANIMATION
+    ========================= */
+
     @keyframes rowIn {
       from {
         opacity: 0;
         transform: translateY(-6px);
       }
+
       to {
         opacity: 1;
         transform: translateY(0);
       }
     }
 
+    /* ==================================================
+       TABLET
+    ================================================== */
+
     @media (max-width: 760px) {
+      body {
+        padding: 22px 14px;
+      }
+
       .header {
         align-items: stretch;
         flex-direction: column;
       }
 
       .scale-control {
-        align-self: stretch;
+        width: 100%;
       }
 
       .scale-control button {
@@ -309,6 +381,10 @@
         grid-column: 1 / -1;
       }
 
+      /*
+        Hide the desktop table headings.
+        Each course becomes its own mobile card.
+      */
       .course-table-header {
         display: none;
       }
@@ -318,59 +394,110 @@
       }
 
       .course-row {
+        position: relative;
+
+        /*
+          IMPORTANT:
+          We no longer use the old negative margin
+          trick that caused the delete button to overlap.
+        */
+        display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 10px;
-        padding: 14px 0;
-        margin-bottom: 2px;
+
+        padding: 16px;
+        margin-bottom: 12px;
+
+        border: 1px solid var(--border);
+        border-radius: 14px;
+
+        background: var(--card-2);
       }
 
-      .course-row input {
+      .course-row:last-child {
+        margin-bottom: 0;
+      }
+
+      /*
+        Course name gets the entire top row.
+      */
+      .course-name {
         grid-column: 1 / -1;
+        padding-right: 52px;
       }
 
-      .course-row select:nth-child(2) {
+      /*
+        Grade and course type sit beside each other.
+      */
+      .grade {
         grid-column: 1;
       }
 
-      .course-row select:nth-child(3) {
+      .course-type {
         grid-column: 2;
       }
 
+      /*
+        Delete button has its own absolute position.
+        This prevents it from ever affecting the layout
+        of the input fields.
+      */
       .delete-btn {
-        grid-column: 2;
-        justify-self: end;
-        margin-top: -52px;
-        transform: translateY(0);
-      }
+        position: absolute;
+        top: 16px;
+        right: 16px;
 
-      .delete-btn:hover {
-        transform: scale(1.04);
+        width: 38px;
+        height: 38px;
       }
     }
 
-    @media (max-width: 430px) {
+    /* ==================================================
+       SMALL PHONE
+    ================================================== */
+
+    @media (max-width: 480px) {
       body {
-        padding: 18px 12px;
+        padding: 16px 10px;
+      }
+
+      .header h1 {
+        font-size: 27px;
+      }
+
+      .header p {
+        font-size: 13px;
       }
 
       .summary {
-        grid-template-columns: 1fr;
-      }
-
-      .summary-card.primary {
-        grid-column: auto;
+        grid-template-columns: 1fr 1fr;
+        gap: 9px;
       }
 
       .summary-card {
-        min-height: auto;
+        min-height: 100px;
+        padding: 16px;
+        border-radius: 14px;
+      }
+
+      .summary-card.primary {
+        grid-column: 1 / -1;
       }
 
       .gpa-value {
-        font-size: 36px;
+        font-size: 38px;
+      }
+
+      .summary-number {
+        font-size: 21px;
+      }
+
+      .courses-card {
+        border-radius: 15px;
       }
 
       .courses-header {
-        padding: 17px;
+        padding: 16px;
       }
 
       .courses-header h2 {
@@ -378,99 +505,237 @@
       }
 
       .add-btn {
-        padding: 9px 11px;
+        padding: 9px 12px;
         font-size: 13px;
+      }
+
+      #courses {
+        padding: 10px;
+      }
+
+      .course-row {
+        padding: 14px;
+        gap: 9px;
+        margin-bottom: 10px;
+      }
+
+      .course-name {
+        padding-right: 50px;
+      }
+
+      .delete-btn {
+        top: 14px;
+        right: 14px;
+        width: 36px;
+        height: 36px;
+        font-size: 15px;
+      }
+
+      input,
+      select {
+        height: 46px;
+        font-size: 14px;
+      }
+
+      .footer-note {
+        padding: 0 8px;
+      }
+    }
+
+    /* ==================================================
+       VERY SMALL PHONES
+    ================================================== */
+
+    @media (max-width: 350px) {
+      .scale-control button {
+        font-size: 11px;
+        padding: 9px 6px;
+      }
+
+      .courses-header {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .add-btn {
+        width: 100%;
+      }
+
+      .course-row {
+        grid-template-columns: 1fr;
+      }
+
+      .grade,
+      .course-type {
+        grid-column: 1;
       }
     }
   </style>
 </head>
 
 <body>
+
   <main class="app">
 
+    <!-- HEADER -->
     <header class="header">
+
       <div>
         <h1>High School GPA Calculator</h1>
-        <p>Add your courses and grades to calculate your GPA instantly.</p>
+        <p>
+          Add your courses and grades to calculate your GPA instantly.
+        </p>
       </div>
 
+      <!-- GPA SCALE -->
       <div class="scale-control" aria-label="GPA scale">
-        <button id="unweightedBtn" class="active" type="button">
+
+        <button
+          id="unweightedBtn"
+          class="active"
+          type="button"
+        >
           Unweighted 4.0
         </button>
-        <button id="weightedBtn" type="button">
+
+        <button
+          id="weightedBtn"
+          type="button"
+        >
           Weighted 5.0
         </button>
+
       </div>
+
     </header>
 
+
+    <!-- GPA SUMMARY -->
     <section class="summary">
+
       <div class="summary-card primary">
-        <div class="summary-label">Overall GPA</div>
-        <div class="gpa-value" id="gpaValue">0.00</div>
+
+        <div class="summary-label">
+          Overall GPA
+        </div>
+
+        <div
+          class="gpa-value"
+          id="gpaValue"
+        >
+          0.00
+        </div>
+
       </div>
 
-      <div class="summary-card">
-        <div class="summary-label">Courses</div>
-        <div class="summary-number" id="courseCount">0</div>
-      </div>
 
       <div class="summary-card">
-        <div class="summary-label">Total Grade Points</div>
-        <div class="summary-number" id="totalPoints">0.00</div>
+
+        <div class="summary-label">
+          Courses
+        </div>
+
+        <div
+          class="summary-number"
+          id="courseCount"
+        >
+          0
+        </div>
+
       </div>
+
+
+      <div class="summary-card">
+
+        <div class="summary-label">
+          Total Grade Points
+        </div>
+
+        <div
+          class="summary-number"
+          id="totalPoints"
+        >
+          0.00
+        </div>
+
+      </div>
+
     </section>
 
+
+    <!-- COURSES -->
     <section class="courses-card">
+
       <div class="courses-header">
+
         <h2>Your Courses</h2>
-        <button class="add-btn" id="addCourseBtn" type="button">
+
+        <button
+          class="add-btn"
+          id="addCourseBtn"
+          type="button"
+        >
           + Add Course
         </button>
+
       </div>
 
+
+      <!-- DESKTOP COLUMN LABELS -->
       <div class="course-table-header">
+
         <div>Course Name</div>
         <div>Grade</div>
         <div>Course Type</div>
         <div></div>
+
       </div>
 
+
+      <!-- COURSE ROWS -->
       <div id="courses"></div>
+
     </section>
 
+
     <p class="footer-note">
-      GPA is calculated using the standard 4.0 scale. Honors courses add
-      0.5 points and AP/IB courses add 1.0 point when Weighted GPA is selected.
+      GPA uses the standard 4.0 scale. Honors courses add 0.5 points
+      and AP/IB courses add 1.0 point when Weighted GPA is selected.
     </p>
+
   </main>
 
-  <script>
-    const coursesContainer = document.getElementById("courses");
-    const addCourseBtn = document.getElementById("addCourseBtn");
-    const unweightedBtn = document.getElementById("unweightedBtn");
-    const weightedBtn = document.getElementById("weightedBtn");
 
-    const gpaValue = document.getElementById("gpaValue");
-    const courseCount = document.getElementById("courseCount");
-    const totalPoints = document.getElementById("totalPoints");
+  <script>
+    const coursesContainer =
+      document.getElementById("courses");
+
+    const addCourseBtn =
+      document.getElementById("addCourseBtn");
+
+    const unweightedBtn =
+      document.getElementById("unweightedBtn");
+
+    const weightedBtn =
+      document.getElementById("weightedBtn");
+
+    const gpaValue =
+      document.getElementById("gpaValue");
+
+    const courseCount =
+      document.getElementById("courseCount");
+
+    const totalPoints =
+      document.getElementById("totalPoints");
+
 
     let weighted = false;
 
+
     /*
-      Standard GPA values.
-
-      Unweighted:
-      A = 4.0
-      B = 3.0
-      C = 2.0
-      D = 1.0
-      F = 0.0
-
-      Weighted:
-      Honors = +0.5
-      AP/IB = +1.0
+      Standard letter-grade values.
     */
+
     const gradePoints = {
       A: 4.0,
       B: 3.0,
@@ -479,37 +744,73 @@
       F: 0.0
     };
 
+
+    /*
+      Additional weighted GPA points.
+    */
+
     const courseTypes = {
       Regular: 0,
       Honors: 0.5,
       "AP / IB": 1.0
     };
 
+
+    /*
+      Create a new course.
+    */
+
     function createCourseRow() {
-      const row = document.createElement("div");
+
+      const row =
+        document.createElement("div");
+
       row.className = "course-row";
 
+
       row.innerHTML = `
+
         <input
           type="text"
           class="course-name"
-          placeholder="e.g. Algebra II"
+          placeholder="Course name"
           aria-label="Course name"
         />
 
-        <select class="grade" aria-label="Letter grade">
+
+        <select
+          class="grade"
+          aria-label="Letter grade"
+        >
+
           <option value="A">A</option>
           <option value="B">B</option>
           <option value="C">C</option>
           <option value="D">D</option>
           <option value="F">F</option>
+
         </select>
 
-        <select class="course-type" aria-label="Course type">
-          <option value="Regular">Regular</option>
-          <option value="Honors">Honors (+0.5)</option>
-          <option value="AP / IB">AP / IB (+1.0)</option>
+
+        <select
+          class="course-type"
+          aria-label="Course type"
+        >
+
+          <option value="Regular">
+            Regular
+          </option>
+
+          <option value="Honors">
+            Honors (+0.5)
+          </option>
+
+          <option value="AP / IB">
+            AP / IB (+1.0)
+          </option>
+
         </select>
+
 
         <button
           class="delete-btn"
@@ -519,77 +820,201 @@
         >
           ✕
         </button>
+
       `;
 
-      row.querySelectorAll("input, select").forEach(element => {
-        element.addEventListener("input", calculateGPA);
-        element.addEventListener("change", calculateGPA);
-      });
 
-      row.querySelector(".delete-btn").addEventListener("click", () => {
-        row.remove();
-        calculateGPA();
-      });
+      /*
+        Recalculate instantly when
+        the user changes a field.
+      */
+
+      row
+        .querySelectorAll("input, select")
+        .forEach(element => {
+
+          element.addEventListener(
+            "input",
+            calculateGPA
+          );
+
+          element.addEventListener(
+            "change",
+            calculateGPA
+          );
+
+        });
+
+
+      /*
+        Delete this course.
+      */
+
+      row
+        .querySelector(".delete-btn")
+        .addEventListener("click", () => {
+
+          row.remove();
+
+          calculateGPA();
+
+        });
+
 
       coursesContainer.appendChild(row);
+
       calculateGPA();
     }
+
+
+    /*
+      Calculate GPA.
+    */
 
     function calculateGPA() {
-      const rows = [...document.querySelectorAll(".course-row")];
+
+      const rows =
+        [...document.querySelectorAll(".course-row")];
+
 
       let points = 0;
+
       let count = 0;
 
-      rows.forEach(row => {
-        const grade = row.querySelector(".grade").value;
-        const type = row.querySelector(".course-type").value;
 
-        let pointsForCourse = gradePoints[grade];
+      rows.forEach(row => {
+
+        const grade =
+          row.querySelector(".grade").value;
+
+        const type =
+          row.querySelector(".course-type").value;
+
+
+        let pointsForCourse =
+          gradePoints[grade];
+
+
+        /*
+          Only apply Honors/AP/IB bonuses
+          when Weighted GPA is enabled.
+        */
 
         if (weighted) {
-          pointsForCourse += courseTypes[type];
+
+          pointsForCourse +=
+            courseTypes[type];
+
         }
 
+
         points += pointsForCourse;
+
         count++;
+
       });
 
-      const gpa = count > 0 ? points / count : 0;
 
-      const maxScale = weighted ? 5 : 4;
+      /*
+        Calculate average.
+      */
 
-      // Safety clamp so the visual result never exceeds the selected scale.
-      const displayedGPA = Math.min(gpa, maxScale);
+      const gpa =
+        count > 0
+          ? points / count
+          : 0;
 
-      gpaValue.textContent = displayedGPA.toFixed(2);
-      courseCount.textContent = count;
-      totalPoints.textContent = points.toFixed(2);
+
+      /*
+        Selected maximum scale.
+      */
+
+      const maxScale =
+        weighted ? 5 : 4;
+
+
+      const displayedGPA =
+        Math.min(gpa, maxScale);
+
+
+      /*
+        Update UI.
+      */
+
+      gpaValue.textContent =
+        displayedGPA.toFixed(2);
+
+      courseCount.textContent =
+        count;
+
+      totalPoints.textContent =
+        points.toFixed(2);
+
     }
+
+
+    /*
+      Switch between weighted
+      and unweighted GPA.
+    */
 
     function setScale(isWeighted) {
+
       weighted = isWeighted;
 
-      unweightedBtn.classList.toggle("active", !weighted);
-      weightedBtn.classList.toggle("active", weighted);
+
+      unweightedBtn.classList.toggle(
+        "active",
+        !weighted
+      );
+
+
+      weightedBtn.classList.toggle(
+        "active",
+        weighted
+      );
+
 
       calculateGPA();
+
     }
 
-    addCourseBtn.addEventListener("click", createCourseRow);
 
-    unweightedBtn.addEventListener("click", () => {
-      setScale(false);
-    });
+    /*
+      Add Course button.
+    */
 
-    weightedBtn.addEventListener("click", () => {
-      setScale(true);
-    });
+    addCourseBtn.addEventListener(
+      "click",
+      createCourseRow
+    );
 
-    // Start with three course rows.
+
+    /*
+      GPA scale buttons.
+    */
+
+    unweightedBtn.addEventListener(
+      "click",
+      () => setScale(false)
+    );
+
+
+    weightedBtn.addEventListener(
+      "click",
+      () => setScale(true)
+    );
+
+
+    /*
+      Start with three courses.
+    */
+
     createCourseRow();
     createCourseRow();
     createCourseRow();
+
   </script>
+
 </body>
 </html>
